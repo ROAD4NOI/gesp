@@ -163,7 +163,7 @@ def crawl_single_page(url):
     return links
 
 def main():
-    default_urls = ["https://gesp.ccf.org.cn/101/1010/10092.html"]
+    default_urls = ["https://gesp.ccf.org.cn/101/1010/10284.html"]
     
     if len(sys.argv) > 1:
         urls = sys.argv[1:]

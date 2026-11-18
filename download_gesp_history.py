@@ -110,6 +110,9 @@ def format_size(size_bytes):
     else:
         return f"{size_bytes / (1024 * 1024):.2f} MB"
 
+# 只抓取指定考次（年, 月）；留空集合 {} 表示抓取全部
+TARGET_SESSIONS = {('2026', '06'), ('2026', '09')}
+
 def crawl_detail_page(url, year, month):
     links = []
     try:
@@ -170,6 +173,8 @@ def crawl_index_page(base_url, max_pages=10):
                         date_match = re.search(r'(\d{4})[-年](\d{1,2})月', link_text)
                         year = date_match.group(1) if date_match else "未知"
                         month = date_match.group(2).zfill(2) if date_match else "01"
+                        if TARGET_SESSIONS and (year, month) not in TARGET_SESSIONS:
+                            continue
                         page_links.append((full_url, link_text, year, month))
             
             for href, link_text, year, month in page_links:
@@ -208,7 +213,7 @@ def main():
     skipped_count = 0
     
     for href, link_text, year, month in all_links:
-        info = extract_info_from_link(link_text, href, year, month)
+        info = extract_info_from_link(link_text, href)
         if info:
             success, is_new = download_file(href, save_dir, info)
             if success:
